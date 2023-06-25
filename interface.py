@@ -2,7 +2,6 @@ from tkinter import *
 from tkinter import messagebox, filedialog
 import openpyxl
 
-
 # TODO: Save the new data to python list
 # TODO: Open excel file and append and save the new data
 # TODO: Validate closing and saving of data to excel sheet
@@ -18,7 +17,6 @@ def next_data_btn():
     # write and append it into a data set
     if len(new[1]) == 0 or len(new[2]) == 0:
         messagebox.showinfo(title="Empty field", message="Please ensure all the fields arent empty")
-        break
     else:
         raw_data.append(new)
         patient_name.delete(0, END)
@@ -27,36 +25,66 @@ def next_data_btn():
 
 
 def save_sheet_btn():
-    # Input validation to check if the last data was saved
+    selected_sheet = ""
+    def select_sheet_menu():
+        selected_sheet = s1.get(ACTIVE)
+        pick_sheet.destroy()
+        return selected_sheet
+
+        # Input validation to check if the last data was saved
+
     last = raw_data[-1]
-    if last[1] == patient_name.get():
-        pass
+    if last[1] == patient_name.get() or patient_name.get() == "":
+        # Opens the Excel file
+        filename = filedialog.askopenfilename()
+        filename.replace("/", "\\")
+        excel_text = openpyxl.load_workbook(filename=filename)
+        all_sheets = excel_text.sheetnames
+        excel_text.close()
+        print(all_sheets)
+
+        # Select sheet window
+        pick_sheet = Toplevel(window)
+        pick_sheet.title("Select the sheet")
+        pick_sheet.config(padx=50, pady=50, bg="white")
+
+        # Scrollbar
+        pick_sheet.yScroll = Scrollbar(pick_sheet, orient=VERTICAL)
+        pick_sheet.yScroll.grid(row=0, column=1)
+
+        # Select sheet to write file into
+        s1 = Listbox(pick_sheet, bg="white", selectmode=SINGLE, yscrollcommand=pick_sheet.yScroll.set)
+        s1.grid(row=0, column=0)
+        pick_sheet.yScroll['command'] = s1.yview
+        for i in range(len(all_sheets)):
+            s1.insert(i+1, all_sheets[i])
+
+        select_sheet_btn = Button(pick_sheet, text="Select Sheet", command=select_sheet_menu)
+        select_sheet_btn.grid(row=1, column=0)
+
+        pick_sheet.mainloop()
+
+        # Reads and displays the sheets in file
+        """
+        final_edit = openpyxl.load_workbook(filename=filename)
+        editable_sheet = final_edit[selected_sheet]
+
+        # Writes into sheet as a loop
+        for i in raw_data:
+            editable_sheet.append(i)
+
+        # Saves file
+        final_edit.save(filename)
+        # Show confirmation message
+        """
+        messagebox.showinfo(title="successful", message="save to Excel file successful")
+        # Close window
+
+
     else:
         next_data_btn()
 
-    # Opens the Excel file
-    filename = filedialog.askopenfilename(defaultextension=".xlsx")
-    print(filename)
-    '''raw = openpyxl.load_workbook(filename=filename)
 
-
-    
-
-    # Reads and displays the sheets in file
-
-    # Select sheet to write file into
-
-    # Writes into sheet as a loop
-
-    # Saves file
-    raw.save(filename)
-    # Show confirmation message
-    messagebox.showinfo( title="successful", message="save to Excel file successful")
-
-    # Close window'''
-    window.destroy()
-
-    pass
 
 
 # UI SETUP

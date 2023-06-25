@@ -1,10 +1,9 @@
 import openpyxl
-
-
 raw = openpyxl.load_workbook("C:\\Users\\USER\\Desktop\\Copy.xlsx")
 
 print(raw.sheetnames)
-
+for i in range( len(raw.sheetnames)):
+    print(i+1, type(i), raw.sheetnames[i])
 octo = raw["OCT 21"]
 print(octo)
 
