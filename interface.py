@@ -13,7 +13,6 @@ def next_data_btn():
     # Insert from validation
     simsval = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     new = ["", patient_name.get(), temp.get()] + simsval
-
     # write and append it into a data set
     if len(new[1]) == 0 or len(new[2]) == 0:
         messagebox.showinfo(title="Empty field", message="Please ensure all the fields arent empty")
@@ -26,12 +25,12 @@ def next_data_btn():
 
 def save_sheet_btn():
     selected_sheet = ""
+
     def select_sheet_menu():
         selected_sheet = s1.get(ACTIVE)
         pick_sheet.destroy()
-        return selected_sheet
 
-        # Input validation to check if the last data was saved
+    # Input validation to check if the last data was saved
 
     last = raw_data[-1]
     if last[1] == patient_name.get() or patient_name.get() == "":
@@ -41,7 +40,6 @@ def save_sheet_btn():
         excel_text = openpyxl.load_workbook(filename=filename)
         all_sheets = excel_text.sheetnames
         excel_text.close()
-        print(all_sheets)
 
         # Select sheet window
         pick_sheet = Toplevel(window)
@@ -57,12 +55,13 @@ def save_sheet_btn():
         s1.grid(row=0, column=0)
         pick_sheet.yScroll['command'] = s1.yview
         for i in range(len(all_sheets)):
-            s1.insert(i+1, all_sheets[i])
+            s1.insert(i + 1, all_sheets[i])
 
         select_sheet_btn = Button(pick_sheet, text="Select Sheet", command=select_sheet_menu)
         select_sheet_btn.grid(row=1, column=0)
-
         pick_sheet.mainloop()
+
+        messagebox.showinfo(title="successful", message="save to Excel file successful")
 
         # Reads and displays the sheets in file
         """
@@ -77,14 +76,11 @@ def save_sheet_btn():
         final_edit.save(filename)
         # Show confirmation message
         """
-        messagebox.showinfo(title="successful", message="save to Excel file successful")
-        # Close window
 
+        # Close window
 
     else:
         next_data_btn()
-
-
 
 
 # UI SETUP
